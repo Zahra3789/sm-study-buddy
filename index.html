@@ -452,13 +452,17 @@ body.xmas .mwrap > .mhat.s, body.halloween .mwrap > .mhat.w { display: block; }
 #title > .banner, #home > .banner { height: 128px !important; flex: none; font-size: 46px !important; padding: 0 70px 20px !important;
   border-image-slice: 33 48 48 48 fill !important; border-image-width: 66px 96px 96px 96px !important; border-image-outset: 40px 0 52px 0 !important; }
 /* battle: one big name-tag ribbon (the art is 48 px tall, yellow face on rows 9-29), and the banter bubbles */
-#speaker { height: 72px !important; font-size: 30px !important; padding: 0 44px 20px !important; margin: 6px 0 -30px 22px !important;
+#speaker { height: 72px !important; font-size: 26px !important; padding: 0 44px 8px !important; margin: 6px 0 -30px 22px !important;
   border-image-slice: 16 24 24 24 fill !important; border-image-width: 24px 36px 36px 36px !important; display: flex; align-items: center;
-  justify-content: center; min-width: 320px; box-sizing: border-box; font-family: Body, sans-serif !important; font-weight: 700; color: #3e2731 !important; text-shadow: none !important; }
-#speaker.good { color: #1a804d !important; } #speaker.bad { color: #8c2b3c !important; }
+  justify-content: center; min-width: 320px; max-width: calc(100% - 44px); white-space: nowrap; overflow: hidden; z-index: 5 !important; box-sizing: border-box; font-family: Body, sans-serif !important; font-weight: 700; color: #fff4d6 !important; text-shadow: 2px 2px 0 #2b1d2a, -1px -1px 0 #2b1d2a !important; }
+#speaker.good { color: #b8ffc8 !important; } #speaker.bad { color: #ffb8c0 !important; }
 .quip { position: absolute; z-index: 24; max-width: 300px; background: #fff4d6; color: #3e2731; border: 4px solid #2b1d2a; border-radius: 14px; padding: 8px 16px 10px;
   font-size: 24px; line-height: 1.2; text-align: center; left: 24px; top: 300px; pointer-events: none; }
 .quip.foe { left: auto; right: 24px; color: #8c2b3c; }
+/* text clear of the 48px box frames (it sat on the frame's edge): name plates and the dialogue box */
+.plate { padding: 40px 50px 34px !important; }
+.plate .nm .title { font-size: 26px !important; line-height: 1.1 !important; }
+#dlg { padding: 46px 50px 40px !important; }
 </style>
 </head>
 <body>
@@ -27156,10 +27160,12 @@ Object.assign(SENSEI, {
   shout_wrong: { proper: ['OOF!', 'NOPE!', 'FLOP!', 'YIKES!', 'NOT IT!', 'L!', 'CEEB!'],
     east: ['CEEB!', 'NACAS!', 'WARYAA!', 'ALLOW IT!', 'PEAK!', 'UKUN!', 'BRUV...'] } });
 let shout = '';
-verdict = function (ok) { const v = $('verdict'); shout = S(ok ? 'shout_right' : 'shout_wrong'); v.textContent = shout; v.className = ok ? 'good' : 'bad';
+verdict = function (ok) { if (typeof clearQuip === 'function') clearQuip(); const v = $('verdict'); shout = S(ok ? 'shout_right' : 'shout_wrong'); v.textContent = shout; v.className = ok ? 'good' : 'bad';
   clearTimeout(v._t); v._t = setTimeout(() => v.className = 'hidden', 1600); };
 const _speaker = speaker;
-speaker = function (name, style) { _speaker(name, style); if ((name === 'CORRECT' || name === 'WRONG') && shout) $('speaker').textContent = shout; };
+speaker = function (name, style) { _speaker(name, style); const e = $('speaker'); if ((name === 'CORRECT' || name === 'WRONG') && shout) e.textContent = shout;
+  // a long name (Ash Trevino Vs Bri (Round 47)) stays on one line and shrinks to fit the tag
+  e.style.removeProperty('font-size'); for (let f = 24; e.scrollWidth > e.clientWidth && f >= 16; f -= 2) e.style.setProperty('font-size', f + 'px', 'important'); };
 // Boss Arena names: daft ones (with a few Somali names mixed in); with E-LDN on, Somali characters.
 const BOSS_NAMES = {
   proper: ['Karen', 'Your Situationship', "Man Who Says 'No Cap' Unironically", 'Love Island Reject', 'Group Chat Admin', 'The Guy From Hinge', 'Influencer With 300 Followers',
@@ -27203,7 +27209,13 @@ makeLineup = function () { const out = _makeLineup(), east = settings.sensei ===
 let bubble = null;
 function quip(fromYou, text) { if (bubble) bubble.remove(); const b = document.createElement('div'); b.className = 'quip' + (fromYou ? '' : ' foe'); b.textContent = text;
   $('field').append(b); bubble = b;
-  b.animate([{ transform: 'scale(.4)', opacity: 1 }, { transform: 'scale(1)', opacity: 1, offset: 0.06 }, { transform: 'scale(1)', opacity: 1, offset: 0.88 }, { transform: 'scale(1)', opacity: 0 }], { duration: 2700, easing: 'ease-out' }).onfinish = () => b.remove(); }
+  b.animate([{ transform: 'scale(.4)' }, { transform: 'scale(1)' }], { duration: 160, easing: 'ease-out' }); }   // stays up until the next answer or bubble
+// East London is the default: switched on once for everyone, then the E-LDN button decides (and is remembered)
+if (!settings.ldnDefault) { settings.sensei = 'east'; settings.ldnDefault = true; saveSettings();
+  if (!$('home').classList.contains('hidden')) showHome(); if (!$('title').classList.contains('hidden')) showTitle(); }
+const clearQuip = () => { if (bubble) bubble.remove(); bubble = null; };
+const _startSession = startSession;
+startSession = function (o) { clearQuip(); return _startSession(o); };
 const _anim = anim;
 anim = function (id, cls) { const e = $(id);
   if (id === 'you' && cls === 'lungeR') { e.animate([{ transform: 'none' }, { transform: 'translate(230px,-120px)', offset: 0.22 }, { transform: 'translate(230px,-120px)', offset: 0.6 }, { transform: 'none' }], { duration: 640, easing: 'ease-out' }); return; }
