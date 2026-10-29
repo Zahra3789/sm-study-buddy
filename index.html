@@ -25520,6 +25520,62 @@ e.cards.push(
   { ch: 14, f: 'Why so much potato inventory?', b: 'One crop a year (harvest Sept-Oct), so potatoes are stored in climate-controlled stores all year.' },
   { ch: 14, f: 'Future plans', b: 'Reduced fat range; subscription and gifting by post; compostable plastic-free bag; more places to buy.' });
 })();
+
+// ====================================================================== the lesson stories, set at Crafted Crisps
+// The Apply-it stories, worked examples and story questions (chapters 1-13) were set at "Sisi Lemonade Ltd". Her
+// call: set them at the pre-seen company instead. The words are swapped, not the sums - every number, table and
+// answer stays exactly as it was, so all the workings still add up. People become the pre-seen's people (same
+// he/she): Hana -> Samantha, Yuki -> Ellie, Kenji -> Ed, Mei -> Nicole, Uncle Taro -> Dean. Bottles of Classic and
+// Yuzu Deluxe become bags of Sea Salt and Truffle & Rosemary; Mixing / Bottling become Cooking / Packing; $ -> H$.
+(function () {
+const e = EXAMS.find(x => x.id === 'SM'); if (!e) return;
+// whole sentences that read oddly after a word-for-word swap, rewritten first (matched on the original text)
+const SENT = [
+  [/Sisi Lemonade Ltd now bottles two drinks, \[b\]Classic\[\/b\] and \[b\]Yuzu Deluxe\[\/b\], in a rented workshop behind the dojo\./g, 'Crafted Crisps makes two lines of crisps, [b]Sea Salt[/b] and [b]Truffle & Rosemary[/b], at its factory on the farm.'],
+  [/There are two production departments, Mixing and Bottling, and a tiny Canteen where Yuki eats her noodles\./g, 'Here we follow two production departments, Cooking and Packing, and a service department, Facilities, that keeps the machines running.'],
+  [/and a tiny Canteen where Yuki eats her noodles/g, 'and Facilities, which keeps the machines running'],
+  [/the noodle bar/g, 'the deli'], [/The noodle bar/g, 'The deli'], [/noodle bar/g, 'deli'], [/noodle-bar/g, 'deli'],
+  [/and the Canteen/g, 'and Facilities'], [/the Canteen/g, 'Facilities'],
+  [/eats her noodles/g, 'takes her break'], [/noodles/g, 'lunch'],
+  [/the Dojo Gate kiosk/g, 'the Farm Gate shop'], [/Dojo Gate kiosk/g, 'Farm Gate shop'], [/Dojo Gate/g, 'Farm Gate'],
+  [/Market Square kiosk/g, 'Market Square shop'],
+  [/Uncle Taro/g, 'Dean'], [/visiting from afar/g, 'the Managing Director'],
+  [/Lemons, yuzu, sugar and glass bottles/g, 'Potatoes, truffle seasoning, oil and packaging'],
+  [/fruit and sugar/g, 'potatoes and oil'],
+  [/spiced syrup/g, 'spiced seasoning'],
+];
+// then word for word (longest first)
+const WORD = [
+  [/Sisi Lemonade Ltd's/g, "Crafted Crisps'"], [/Sisi Lemonade Ltd/g, 'Crafted Crisps'], [/Sisi's Lemonade Stand/g, 'Crafted Crisps'],
+  [/Sisi's lemonade business/g, 'Crafted Crisps'], [/lemonade business/g, 'crisp business'], [/Lemonade Stand/g, 'Crafted Crisps'], [/Lemonade/g, 'Crafted Crisps'],
+  [/a bottle of lemonade/g, 'a bag of crisps'], [/lemonade/g, 'crisps'],
+  [/Yuzu Deluxe/g, 'Truffle & Rosemary'], [/\bYuzu\b/g, 'Truffle'], [/\byuzu\b/g, 'truffle'],
+  [/\bClassic\b/g, 'Sea Salt'],
+  [/\bBottling\b/g, 'Packing'], [/\bbottling\b/g, 'packing'], [/\bbottled\b/g, 'packed'], [/\bbottles\b/g, 'bags'], [/\bbottle\b/g, 'bag'],
+  [/\bBottles\b/g, 'Bags'], [/\bBottle\b/g, 'Bag'], [/\bBottled\b/g, 'Packed'],
+  [/\bMixing\b/g, 'Cooking'], [/\bCanteen\b/g, 'Facilities'], [/\bcanteen\b/g, 'facilities'],
+  [/\bworkshop\b/g, 'factory'], [/\bWorkshop\b/g, 'Factory'],
+  [/\bkiosks\b/g, 'farm shops'], [/\bkiosk\b/g, 'farm shop'], [/\bKiosk\b/g, 'Farm shop'],
+  [/\bstall\b/g, 'shop'], [/\bstalls\b/g, 'shops'],
+  [/\blemons\b/g, 'potatoes'], [/\bLemons\b/g, 'Potatoes'], [/\blemon\b/g, 'potato'], [/\bLemon\b/g, 'Potato'],
+  [/\bsugar\b/g, 'oil'], [/\bSugar\b/g, 'Oil'], [/\bsyrup\b/g, 'seasoning'], [/\bSyrup\b/g, 'Seasoning'],
+  [/\bfruit\b/g, 'potatoes'], [/\bFruit\b/g, 'Potatoes'], [/\bTruffle potatoes\b/g, 'Truffle seasoning'],
+  [/\blitres\b/g, 'kg'], [/\blitre\b/g, 'kg'],
+  [/\bcups\b/g, 'bags'], [/\bcup\b/g, 'bag'], [/\bCups\b/g, 'Bags'], [/\bCup\b/g, 'Bag'],
+  [/\bdrinks\b/g, 'crisps'], [/\bthe drink\b/g, 'the crisps'], [/\bdrink\b/g, 'crisp'],
+  [/\bthe dojo\b/g, 'the farm'], [/\bThe dojo\b/g, 'The farm'], [/\bdojo\b/g, 'farm'], [/\bDojo\b/g, 'Farm'],
+  [/\bHana\b/g, 'Samantha'], [/\bYuki\b/g, 'Ellie'], [/\bKenji\b/g, 'Ed'], [/\bMei\b/g, 'Nicole'], [/\bTaro\b/g, 'Dean'],
+  // money: "$1.50", "$ per bag", a lone "$" column heading
+  [/(^|[^A-Za-z])\$(?=\s?[\d(])/g, '$1H$$'], [/(^|[\s(["])\$(?=$|[\s)\]".,;:])/g, '$1H$$'],
+];
+const fix = s => { for (const [a, b] of SENT) s = s.replace(a, b); for (const [a, b] of WORD) s = s.replace(a, b); return s; };
+const walk = v => typeof v === 'string' ? fix(v) : Array.isArray(v) ? v.map(walk) : (v && typeof v === 'object') ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, k === 'type' || k === 'id' ? x : walk(x)])) : v;
+for (const c of e.chapters) {
+  if (c.id > 13) continue;   // the pre-seen chapter is already about Crafted Crisps
+  c.lessons = walk(c.lessons); if (c.beats) c.beats = walk(c.beats); if (c.mtq) c.mtq = walk(c.mtq);
+}
+e.cards = e.cards.map(k => k.ch > 13 ? k : walk(k));
+})();
 </script>
 <script>Object.assign(ASSETS, {
 '../assets/scenery/Sky.png':'data:image/png;base64,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AIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBAQYT9AgACBUECEQ3zTBAgQEGE/QIAAgVBAhEN80wQIEBBhP0CAAIFQQIRDfNMECBC4t9oFAfVofjcAAAAASUVORK5CYII=',
@@ -26501,7 +26557,7 @@ function renderLessonInner() {
   L.onTap = null;
   if (L.phase === 'apply') {
     const a = l.apply, p = a.pages[L.i], t = el('div', 'ltext', bb(p.text || ''));
-    box.append(el('div', 'applyHead', `&#127819; ${esc(a.title || "Sisi's Lemonade Stand")}`), t); if (p.table) box.append(table(p.table));
+    box.append(el('div', 'applyHead', `&#129364; ${esc(a.title || "Sisi's Lemonade Stand")}`), t); if (p.table) box.append(table(p.table));
     box.append(el('div', 'tapHint', `Scene ${L.i + 1} of ${a.pages.length}  ·  tap the page to go on`));
     L.onTap = () => L.i + 1 < a.pages.length ? go('apply', L.i + 1) : next();
     nav.append(button('Back', '04A', () => L.i ? go('apply', L.i - 1) : prev()), button('Next', '03A', L.onTap));
